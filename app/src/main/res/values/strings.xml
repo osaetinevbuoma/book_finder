@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Book Finder</string>
+    <string name="find_book">Find a book...</string>
+    <string name="logo_description">Book finder logo</string>
+</resources>
