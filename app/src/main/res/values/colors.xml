@@ -6,5 +6,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorEditText">#ACACAC</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorLightGrey">#E6E6E6</color>
     <color name="editTextColor">#4B4B4B</color>
 </resources>

@@ -2,4 +2,25 @@
     <string name="app_name">Book Finder</string>
     <string name="find_book">Find a book...</string>
     <string name="logo_description">Book finder logo</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="book_title">Romeo and Juliet</string>
+    <string name="book_description">A retelling in rhymed couplets of Shakespeare\'s tragedy of ill-fated young lovers is accompanied by illustrations from the author\'s second-grade class.</string>
+
+    <string name="authors">
+        Lois Burdett \nWilliam Shakespeare
+    </string>
+    <string name="label_authors">Authors</string>
+    <string name="label_publisher">Publisher</string>
+    <string name="label_publication_year">Publication Year</string>
+    <string name="label_pages">Pages</string>
+    <string name="label_categories">Categories</string>
+    <string name="label_description">Description</string>
+    <string name="book_details_app_title">Book Details</string>
+    <string name="action_bookmark">Add to Favorite</string>
+    <string name="action_view_bookmark">View Favorite</string>
+    <string name="saved_books_app_title">Saved Books</string>
+    <string name="no_book_title">Provide a book title to find.</string>
+    <string name="no_network">Internet connection is required to search for books.</string>
 </resources>
