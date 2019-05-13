@@ -1,6 +1,7 @@
 package com.modnsolutions.bookfinder;
 
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+
+import static android.content.Context.SEARCH_SERVICE;
 
 public class BookDetailFragment extends Fragment {
 
@@ -47,9 +51,9 @@ public class BookDetailFragment extends Fragment {
             case R.id.action_bookmark:
                 return true;
 
-            case R.id.action_view_bookmark:
+           /* case R.id.action_view_bookmark:
                 startActivity(new Intent(getContext(), BookmarkActivity.class));
-                return true;
+                return true;*/
         }
 
         return super.onOptionsItemSelected(item);

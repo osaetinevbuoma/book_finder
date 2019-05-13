@@ -1,7 +1,6 @@
 package com.modnsolutions.bookfinder.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.modnsolutions.bookfinder.R;
 import com.modnsolutions.bookfinder.SearchResultsFragment;
-import com.modnsolutions.bookfinder.utils.Utilites;
+import com.modnsolutions.bookfinder.utils.Utilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
 
 public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.ViewHolder> {
 
@@ -28,12 +25,14 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
     private JSONArray mBooks;
     private Context mContext;
     private SearchResultsFragment.SearchResultsFragmentListener mListener;
+    private String mQueryString;
 
-    public BookFinderAdapter(Context context, JSONArray books,
+    public BookFinderAdapter(Context context, JSONArray books, String queryString,
                              SearchResultsFragment.SearchResultsFragmentListener listener) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mBooks = books;
+        mQueryString = queryString;
         mListener = listener;
     }
 
@@ -51,7 +50,7 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
             JSONObject book = mBooks.getJSONObject(position);
 
             Glide.with(mContext)
-                    .load(Utilites.convertImageURL(book.getJSONObject("imageLinks")
+                    .load(Utilities.convertImageURL(book.getJSONObject("imageLinks")
                             .getString("thumbnail")))
                     .centerCrop()
                     .into(holder.mBookImageView);
@@ -73,7 +72,6 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
     public void setBooks(JSONArray books) {
         mBooks = books;
         notifyDataSetChanged();
-        Log.d("BookFinderAdapter", mBooks.toString());
     }
 
 
@@ -99,7 +97,13 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            mListener.onSearchResultClicked(null);
+            try {
+                int position = getAdapterPosition();
+                JSONObject book = (JSONObject) mBooks.get(position);
+                mListener.onSearchResultClicked(book.getString("id"), mQueryString, position);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

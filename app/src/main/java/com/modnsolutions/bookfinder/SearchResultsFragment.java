@@ -1,7 +1,9 @@
 package com.modnsolutions.bookfinder;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -30,12 +32,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+/**
+ * TODO: Reload more books once the user scrolls to bottom of screen.
+ */
 public class SearchResultsFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<JSONArray> {
 
     public static final String FRAGMENT_TAG = SearchResultsFragment.class.getCanonicalName();
     public static final String QUERY_STRING_EXTRA =
             "com.modnsolutions.bookfinder.QUERY_STRING_EXTRA";
+    public static final String QUERY_ID_EXTRA = "com.modnsolutions.bookfinder.QUERY_ID_EXTRA";
+    public static final String QUERY_POSITION_EXTRA =
+            "com.modnsolutions.bookfinder.QUERY_POSITION_EXTRA";
     private static final int LOADER_ID = 0;
 
     private RecyclerView mSearchResultsRV;
@@ -44,6 +52,7 @@ public class SearchResultsFragment extends Fragment implements
     private String mQueryString;
     private int mStartIndex = 0;
     private LoaderManager mLoaderManager;
+    private int mPosition;
 
     public SearchResultsFragment() {
         // Required empty public constructor
@@ -65,31 +74,31 @@ public class SearchResultsFragment extends Fragment implements
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_search_results, container, false);
 
+        // Check if search query intent comes from search action bar or main activity screen.
         Intent intent = getActivity().getIntent();
-        mQueryString = intent.getStringExtra(QUERY_STRING_EXTRA);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            mQueryString = intent.getStringExtra(SearchManager.QUERY);
+        } else {
+            mQueryString = intent.getStringExtra(SearchResultsFragment.QUERY_STRING_EXTRA);
+        }
 
+        // Create query bundle for the load manager and restart the load manager.
         Bundle bundle = new Bundle();
         bundle.putString(QUERY_STRING_EXTRA, mQueryString);
         mLoaderManager.restartLoader(LOADER_ID, bundle, this);
 
+        // Set up recycler view and adapter.
         mSearchResultsRV = root.findViewById(R.id.recycler_view_search_results);
-        mAdapter = new BookFinderAdapter(getContext(), null, mListener);
+        mAdapter = new BookFinderAdapter(getContext(), null, mQueryString, mListener);
         mSearchResultsRV.setAdapter(mAdapter);
         mSearchResultsRV.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        return root;
-    }
-
-    private LinkedList<Book> initializeSampleData() {
-        LinkedList<Book> books = new LinkedList<>();
-        for (int i = 0; i < 10; i++) {
-            Book book = new Book(getResources().getString(R.string.book_title),
-                    getResources().getString(R.string.book_description));
-
-            books.add(book);
+        // If the Up button was clicked, get the position of the book that was clicked
+        if (intent.hasExtra(QUERY_POSITION_EXTRA)) {
+            mPosition = intent.getIntExtra(QUERY_POSITION_EXTRA, 0);
         }
 
-        return books;
+        return root;
     }
 
     @Override
@@ -119,6 +128,9 @@ public class SearchResultsFragment extends Fragment implements
     public void onLoadFinished(@NonNull Loader<JSONArray> loader, JSONArray data) {
         if (data != null) {
             mAdapter.setBooks(data);
+            // Return the user to the position of the clicked book
+            // Or put the user at the first book.
+            mSearchResultsRV.scrollToPosition(mPosition);
         }
     }
 
@@ -129,6 +141,6 @@ public class SearchResultsFragment extends Fragment implements
 
     public interface SearchResultsFragmentListener {
         // When an search result in the recyclerview is clicked.
-        void onSearchResultClicked(String id);
+        void onSearchResultClicked(String id, String query, int position);
     }
 }

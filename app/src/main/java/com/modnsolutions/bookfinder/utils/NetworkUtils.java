@@ -114,7 +114,7 @@ public class NetworkUtils {
         // Format authors into a continuous string value.
         StringBuilder authorsBuilder = new StringBuilder();
         for (int j = 0; j < authorsArray.length(); j++) {
-            if (authorsArray.length() > 1) {
+            if (authorsArray.length() > 1 && j != authorsArray.length() - 1) {
                 authorsBuilder.append(authorsArray.get(j));
                 authorsBuilder.append("\n");
             }

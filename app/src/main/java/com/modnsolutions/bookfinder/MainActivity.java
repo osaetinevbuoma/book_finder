@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                     // Check availability of network connection and that a query string is entered.
                     if (networkInfo != null && networkInfo.isConnected() && queryString.length()
                             != 0) {
-                        Intent intent = new Intent(getApplicationContext(), SearchResultsActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), BookFinderActivity.class);
                         intent.putExtra(SearchResultsFragment.QUERY_STRING_EXTRA, queryString);
                         startActivity(intent);
                     } else {

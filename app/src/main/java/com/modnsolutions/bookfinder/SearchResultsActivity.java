@@ -36,16 +36,16 @@ public class SearchResultsActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_view_bookmark:
+            /*case R.id.action_view_bookmark:
                 startActivity(new Intent(this, BookmarkActivity.class));
-                return true;
+                return true;*/
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onSearchResultClicked(String id) {
+    public void onSearchResultClicked(String id, String queryString, int position) {
         if (mTwoPane) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -54,7 +54,11 @@ public class SearchResultsActivity extends AppCompatActivity implements
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
         } else {
-            startActivity(new Intent(this, BookDetailActivity.class));
+            Intent intent = new Intent(this, BookDetailActivity.class);
+            intent.putExtra(SearchResultsFragment.QUERY_STRING_EXTRA, queryString);
+            intent.putExtra(SearchResultsFragment.QUERY_ID_EXTRA, id);
+            intent.putExtra(SearchResultsFragment.QUERY_POSITION_EXTRA, position);
+            startActivity(intent);
         }
     }
 }

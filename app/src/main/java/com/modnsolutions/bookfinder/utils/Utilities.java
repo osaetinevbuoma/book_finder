@@ -1,6 +1,6 @@
 package com.modnsolutions.bookfinder.utils;
 
-public class Utilites {
+public class Utilities {
 
     /**
      * Google Books API does not allow insecure image loading. Convert URL string to https.

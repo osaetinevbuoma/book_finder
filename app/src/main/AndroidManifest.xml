@@ -12,15 +12,33 @@
         android:roundIcon="@mipmap/ic_book_finder_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BookmarkActivity"
-            android:label="@string/saved_books_app_title"></activity>
+        <activity android:name=".BookFinderActivity"
+            android:theme="@style/TabTheme">
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".BookmarkActivity"
+            android:label="@string/saved_books_app_title" />
         <activity
             android:name=".BookDetailActivity"
             android:label="@string/book_details_app_title"
-            android:parentActivityName=".SearchResultsActivity">
+            android:parentActivityName=".BookFinderActivity">
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SearchResultsActivity" />
+                android:value=".BookFinderActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
         </activity>
         <activity android:name=".SearchResultsActivity" />
         <activity

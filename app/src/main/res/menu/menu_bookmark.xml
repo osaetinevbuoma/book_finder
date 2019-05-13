@@ -6,6 +6,6 @@
         android:icon="@drawable/ic_bookmark_unsaved"
         android:title="@string/action_bookmark"
         android:visible="true"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         app:showAsAction="always" />
 </menu>
