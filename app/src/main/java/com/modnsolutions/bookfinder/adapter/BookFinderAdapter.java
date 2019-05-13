@@ -15,19 +15,20 @@ import com.modnsolutions.bookfinder.R;
 import com.modnsolutions.bookfinder.SearchResultsFragment;
 import com.modnsolutions.bookfinder.utils.Utilities;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.ViewHolder> {
 
     private LayoutInflater mInflater;
-    private JSONArray mBooks;
+    private List<JSONObject> mBooks;
     private Context mContext;
     private SearchResultsFragment.SearchResultsFragmentListener mListener;
     private String mQueryString;
 
-    public BookFinderAdapter(Context context, JSONArray books, String queryString,
+    public BookFinderAdapter(Context context, List<JSONObject> books, String queryString,
                              SearchResultsFragment.SearchResultsFragmentListener listener) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
@@ -47,7 +48,7 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
-            JSONObject book = mBooks.getJSONObject(position);
+            JSONObject book = mBooks.get(position);
 
             Glide.with(mContext)
                     .load(Utilities.convertImageURL(book.getJSONObject("imageLinks")
@@ -66,11 +67,13 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
     @Override
     public int getItemCount() {
         if (mBooks == null) return 0;
-        return mBooks.length();
+        return mBooks.size();
     }
 
-    public void setBooks(JSONArray books) {
-        mBooks = books;
+    public void setBooks(List<JSONObject> books) {
+        if (mBooks == null) mBooks = books;
+        else mBooks.addAll(books);
+
         notifyDataSetChanged();
     }
 
@@ -99,7 +102,7 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
         public void onClick(View v) {
             try {
                 int position = getAdapterPosition();
-                JSONObject book = (JSONObject) mBooks.get(position);
+                JSONObject book = mBooks.get(position);
                 mListener.onSearchResultClicked(book.getString("id"), mQueryString, position);
             } catch (JSONException e) {
                 e.printStackTrace();

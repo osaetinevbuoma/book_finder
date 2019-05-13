@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 public class NetworkUtils {
 
@@ -20,6 +22,7 @@ public class NetworkUtils {
     private static final String QUERY_PARAM = "q";
     private static final String MAX_RESULTS = "maxResults";
     private static final String START_INDEX = "startIndex";
+    public static final int LOAD_INCREMENT = 10;
 
     /**
      * Search for books from Google Books API using the query string and start index (for paging).
@@ -28,15 +31,15 @@ public class NetworkUtils {
      * @param startIndex pagination
      * @return
      */
-    public static JSONArray searchBook(String queryString, int startIndex) {
-        JSONArray results = new JSONArray();
+    public static List<JSONObject> searchBook(String queryString, int startIndex) {
+        List<JSONObject> results = new LinkedList<>();
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
         try {
             Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                     .appendQueryParameter(QUERY_PARAM, queryString)
-                    .appendQueryParameter(MAX_RESULTS, "10")
+                    .appendQueryParameter(MAX_RESULTS, String.valueOf(LOAD_INCREMENT))
                     .appendQueryParameter(START_INDEX, String.valueOf(startIndex))
                     .build();
             URL requestURL = new URL(builtUri.toString());
@@ -82,7 +85,7 @@ public class NetworkUtils {
                 book.put("authors", formatAuthors(object.getJSONObject("volumeInfo")
                         .getJSONArray("authors")));
 
-                results.put(book);
+                results.add(book);
             }
 
         } catch (IOException e) {

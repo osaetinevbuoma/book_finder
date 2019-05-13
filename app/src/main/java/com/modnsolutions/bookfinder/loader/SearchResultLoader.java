@@ -9,8 +9,11 @@ import androidx.loader.content.AsyncTaskLoader;
 import com.modnsolutions.bookfinder.utils.NetworkUtils;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
-public class SearchResultLoader extends AsyncTaskLoader<JSONArray> {
+import java.util.List;
+
+public class SearchResultLoader extends AsyncTaskLoader<List<JSONObject>> {
 
     private String mQueryString;
     private int mStartIndex;
@@ -23,7 +26,7 @@ public class SearchResultLoader extends AsyncTaskLoader<JSONArray> {
 
     @Nullable
     @Override
-    public JSONArray loadInBackground() {
+    public List<JSONObject> loadInBackground() {
         return NetworkUtils.searchBook(mQueryString, mStartIndex);
     }
 
