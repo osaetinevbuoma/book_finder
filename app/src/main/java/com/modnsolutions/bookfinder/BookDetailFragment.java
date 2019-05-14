@@ -1,10 +1,8 @@
 package com.modnsolutions.bookfinder;
 
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
@@ -30,8 +27,6 @@ import com.modnsolutions.bookfinder.utils.Utilities;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static android.content.Context.SEARCH_SERVICE;
 
 public class BookDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<JSONObject> {
@@ -109,10 +104,6 @@ public class BookDetailFragment extends Fragment implements
         switch (item.getItemId()) {
             case R.id.action_bookmark:
                 return true;
-
-           /* case R.id.action_view_bookmark:
-                startActivity(new Intent(getContext(), BookmarkActivity.class));
-                return true;*/
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,10 +1,10 @@
 package com.modnsolutions.bookfinder;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 public class BookmarkActivity extends AppCompatActivity implements
         BookmarkFragment.BookFragmentListener {

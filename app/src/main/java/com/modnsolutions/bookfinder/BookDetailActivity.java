@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -54,10 +53,6 @@ public class BookDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.action_view_bookmark:
-                startActivity(new Intent(this, BookmarkActivity.class));
-                return true;*/
-
             case android.R.id.home:
                 // When the Up button is pressed, the SearchResultsActivity should have the query
                 // string and the current position of the book that was clicked. This will ensure

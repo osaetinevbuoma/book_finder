@@ -1,7 +1,8 @@
 package com.modnsolutions.bookfinder.utils;
 
 import android.net.Uri;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,7 +118,7 @@ public class NetworkUtils {
      * @return
      * @throws JSONException
      */
-    private static JSONObject httpService(Uri uri) throws JSONException {
+    private static JSONObject httpService(@NonNull Uri uri) throws JSONException {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         // Use a StringBuilder to hold the incoming response.
@@ -167,7 +168,7 @@ public class NetworkUtils {
      * @param array JSONArray of authors.
      * @return String of authors.
      */
-    private static String formatJSONArray(JSONArray array) throws JSONException {
+    private static String formatJSONArray(@NonNull JSONArray array) throws JSONException {
         // Format authors into a continuous string value.
         StringBuilder arrayBuilder = new StringBuilder();
         for (int j = 0; j < array.length(); j++) {

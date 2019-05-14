@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 public class Utilities {
 
     /**
@@ -13,7 +15,7 @@ public class Utilities {
      * @param imageURL original image URL
      * @return converted image URL.
      */
-    public static String convertImageURL(String imageURL) {
+    public static String convertImageURL(@NonNull String imageURL) {
         return "https" + imageURL.substring(4);
     }
 

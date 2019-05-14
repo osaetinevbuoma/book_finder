@@ -3,10 +3,13 @@ package com.modnsolutions.bookfinder;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,26 +19,13 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.modnsolutions.bookfinder.adapter.BookFinderAdapter;
 import com.modnsolutions.bookfinder.loader.SearchResultLoader;
 import com.modnsolutions.bookfinder.utils.NetworkUtils;
 import com.modnsolutions.bookfinder.utils.Utilities;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.LinkedList;
 import java.util.List;
 
 

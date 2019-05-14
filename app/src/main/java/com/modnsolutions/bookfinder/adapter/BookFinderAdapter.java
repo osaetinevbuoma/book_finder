@@ -70,6 +70,12 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
         return mBooks.size();
     }
 
+    /**
+     * Set books/update books in adapter.
+     * Notify adapter of dataset change when book is updated.
+     *
+     * @param books
+     */
     public void setBooks(List<JSONObject> books) {
         if (mBooks == null) mBooks = books;
         else mBooks.addAll(books);

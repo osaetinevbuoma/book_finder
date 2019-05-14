@@ -32,7 +32,8 @@ public class BookFinderActivity extends AppCompatActivity implements
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home).setText("Home"));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_bookmark_saved).setText("Favorites"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_bookmark_saved)
+                .setText("Favorites"));
 
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorWhite));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
