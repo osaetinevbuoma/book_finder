@@ -10,23 +10,19 @@ import com.modnsolutions.bookfinder.utils.NetworkUtils;
 
 import org.json.JSONObject;
 
-import java.util.List;
+public class BookDetailLoader extends AsyncTaskLoader<JSONObject> {
+    private String bookId;
 
-public class SearchResultLoader extends AsyncTaskLoader<List<JSONObject>> {
-
-    private String mQueryString;
-    private int mStartIndex;
-
-    public SearchResultLoader(@NonNull Context context, String queryString, int startIndex) {
+    public BookDetailLoader(@NonNull Context context, String bookId) {
         super(context);
-        mQueryString = queryString;
-        mStartIndex = startIndex;
+        this.bookId = bookId;
     }
 
     @Nullable
     @Override
-    public List<JSONObject> loadInBackground() {
-        return NetworkUtils.searchBook(mQueryString, mStartIndex);
+    public JSONObject loadInBackground() {
+        // TODO: Check if book is saved in favorite. If it is, get the book and display. If not, fetch the book from Google Books API.
+        return NetworkUtils.bookDetail(bookId);
     }
 
     @Override

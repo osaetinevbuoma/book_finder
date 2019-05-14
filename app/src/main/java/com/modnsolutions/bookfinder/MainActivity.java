@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.modnsolutions.bookfinder.utils.Utilities;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,22 +40,20 @@ public class MainActivity extends AppCompatActivity {
                     // Get connection status.
                     ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.
                             CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = null;
-                    if (connMgr != null) {
-                        networkInfo = connMgr.getActiveNetworkInfo();
-                    }
 
                     // Check availability of network connection and that a query string is entered.
-                    if (networkInfo != null && networkInfo.isConnected() && queryString.length()
+                    if (Utilities.checkInternetConnectivity(connMgr) && queryString.length()
                             != 0) {
                         Intent intent = new Intent(getApplicationContext(), BookFinderActivity.class);
                         intent.putExtra(SearchResultsFragment.QUERY_STRING_EXTRA, queryString);
                         startActivity(intent);
                     } else {
                         if (queryString.length() == 0) {
-                            toastMessage(getString(R.string.no_book_title));
+                            Utilities.toastMessage(getApplicationContext(),
+                                    getString(R.string.no_book_title));
                         } else {
-                            toastMessage(getString(R.string.no_network));
+                            Utilities.toastMessage(getApplicationContext(),
+                                    getString(R.string.no_network));
                         }
                     }
 

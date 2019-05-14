@@ -1,5 +1,10 @@
 package com.modnsolutions.bookfinder.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
+
 public class Utilities {
 
     /**
@@ -10,6 +15,30 @@ public class Utilities {
      */
     public static String convertImageURL(String imageURL) {
         return "https" + imageURL.substring(4);
+    }
+
+    /**
+     * Check network connection.
+     *
+     * @param connectivityManager
+     * @return
+     */
+    public static boolean checkInternetConnectivity(ConnectivityManager connectivityManager) {
+        NetworkInfo networkInfo = null;
+        if (connectivityManager != null) {
+            networkInfo = connectivityManager.getActiveNetworkInfo();
+        }
+
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    /**
+     * Display toast message.
+     * @param context
+     * @param message
+     */
+    public static void toastMessage(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
 }

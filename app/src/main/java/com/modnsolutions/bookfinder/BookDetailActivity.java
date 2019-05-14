@@ -1,7 +1,9 @@
 package com.modnsolutions.bookfinder;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,6 +11,8 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+
+import com.modnsolutions.bookfinder.utils.Utilities;
 
 public class BookDetailActivity extends AppCompatActivity {
 
@@ -21,14 +25,18 @@ public class BookDetailActivity extends AppCompatActivity {
                 .replace(R.id.framelayout_book_detail, new BookDetailFragment())
                 .commit();
 
-        // Get search query for SearchView intent and send to BookFinderActivity for query.
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Intent searchIntent = new Intent(this, BookFinderActivity.class);
-            searchIntent.putExtra(SearchResultsFragment.QUERY_STRING_EXTRA, intent
-                    .getStringExtra(SearchManager.QUERY));
-            startActivity(searchIntent);
-        }
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.
+                CONNECTIVITY_SERVICE);
+        if (Utilities.checkInternetConnectivity(connectivityManager)) {
+            // Get search query for SearchView intent and send to BookFinderActivity for query.
+            Intent intent = getIntent();
+            if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+                Intent searchIntent = new Intent(this, BookFinderActivity.class);
+                searchIntent.putExtra(SearchResultsFragment.QUERY_STRING_EXTRA, intent
+                        .getStringExtra(SearchManager.QUERY));
+                startActivity(searchIntent);
+            }
+        } else Utilities.toastMessage(this, getString(R.string.no_network));
     }
 
     @Override

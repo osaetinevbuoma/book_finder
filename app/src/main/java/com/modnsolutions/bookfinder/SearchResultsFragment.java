@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import com.modnsolutions.bookfinder.adapter.BookFinderAdapter;
 import com.modnsolutions.bookfinder.loader.SearchResultLoader;
 import com.modnsolutions.bookfinder.utils.NetworkUtils;
+import com.modnsolutions.bookfinder.utils.Utilities;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -73,7 +75,6 @@ public class SearchResultsFragment extends Fragment implements
         super.onCreate(savedInstanceState);
 
         mLoaderManager = LoaderManager.getInstance(this);
-
         if (mLoaderManager.getLoader(LOADER_ID) != null)
             mLoaderManager.initLoader(LOADER_ID, null, this);
     }
@@ -93,39 +94,47 @@ public class SearchResultsFragment extends Fragment implements
         mNoResultTextView.setText("");
         mNoResultTextView.setVisibility(View.INVISIBLE);
 
-        // Check if search query intent comes from search action bar or main activity screen.
-        Intent intent = getActivity().getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            mQueryString = intent.getStringExtra(SearchManager.QUERY);
-        } else {
-            mQueryString = intent.getStringExtra(SearchResultsFragment.QUERY_STRING_EXTRA);
-        }
-
-        // Create query bundle for the load manager and restart the load manager.
-        Bundle bundle = new Bundle();
-        bundle.putString(QUERY_STRING_EXTRA, mQueryString);
-        bundle.putInt(QUERY_START_INDEX_EXTRA, mStartIndex);
-        mLoaderManager.restartLoader(LOADER_ID, bundle, this);
-
-        // Set up recycler view and adapter.
-        mSearchResultsRV = root.findViewById(R.id.recycler_view_search_results);
-        mAdapter = new BookFinderAdapter(getContext(), null, mQueryString, mListener);
-        mSearchResultsRV.setAdapter(mAdapter);
-        mSearchResultsRV.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // If the Up button was clicked, get the position of the book that was clicked
-        if (intent.hasExtra(QUERY_POSITION_EXTRA)) {
-            mPosition = intent.getIntExtra(QUERY_POSITION_EXTRA, 0);
-        }
-
-        // Add a scroll listener to listen to when the recycler view is scrolled to the end.
-        mSearchResultsRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                loadMoreBooks(recyclerView);
+        // Check Internet connection.
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Utilities.checkInternetConnectivity(connectivityManager)) {
+            // Check if search query intent comes from search action bar or main activity screen.
+            Intent intent = getActivity().getIntent();
+            if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+                mQueryString = intent.getStringExtra(SearchManager.QUERY);
+            } else {
+                mQueryString = intent.getStringExtra(SearchResultsFragment.QUERY_STRING_EXTRA);
             }
-        });
+
+            // Create query bundle for the load manager and restart the load manager.
+            Bundle bundle = new Bundle();
+            bundle.putString(QUERY_STRING_EXTRA, mQueryString);
+            bundle.putInt(QUERY_START_INDEX_EXTRA, mStartIndex);
+            mLoaderManager.restartLoader(LOADER_ID, bundle, this);
+
+            // Set up recycler view and adapter.
+            mSearchResultsRV = root.findViewById(R.id.recycler_view_search_results);
+            mAdapter = new BookFinderAdapter(getContext(), null, mQueryString, mListener);
+            mSearchResultsRV.setAdapter(mAdapter);
+            mSearchResultsRV.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            // If the Up button was clicked, get the position of the book that was clicked
+            if (intent.hasExtra(QUERY_POSITION_EXTRA)) {
+                mPosition = intent.getIntExtra(QUERY_POSITION_EXTRA, 0);
+            }
+
+            // Add a scroll listener to listen to when the recycler view is scrolled to the end.
+            mSearchResultsRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    loadMoreBooks(recyclerView);
+                }
+            });
+        } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            Utilities.toastMessage(getContext(), getString(R.string.no_network));
+        }
 
         return root;
     }

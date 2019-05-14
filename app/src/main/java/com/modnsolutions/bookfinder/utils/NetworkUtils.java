@@ -18,7 +18,7 @@ import java.util.List;
 
 public class NetworkUtils {
 
-    private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes?";
+    private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes";
     private static final String QUERY_PARAM = "q";
     private static final String MAX_RESULTS = "maxResults";
     private static final String START_INDEX = "startIndex";
@@ -33,41 +33,16 @@ public class NetworkUtils {
      */
     public static List<JSONObject> searchBook(String queryString, int startIndex) {
         List<JSONObject> results = new LinkedList<>();
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
 
         try {
-            Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+            Uri builtUri = Uri.parse(BASE_URL + "?").buildUpon()
                     .appendQueryParameter(QUERY_PARAM, queryString)
                     .appendQueryParameter(MAX_RESULTS, String.valueOf(LOAD_INCREMENT))
                     .appendQueryParameter(START_INDEX, String.valueOf(startIndex))
                     .build();
-            URL requestURL = new URL(builtUri.toString());
-
-            // Open Connection
-            urlConnection = (HttpURLConnection) requestURL.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            // Get InputStream
-            InputStream inputStream = urlConnection.getInputStream();
-
-            // Create BufferedReader from the input stream
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            // Use a StringBuilder to hold the incoming response.
-            StringBuilder builder = new StringBuilder();
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-                builder.append("\n");
-            }
-
-            if (builder.length() == 0) return null; // Builder was empty.
 
             // Extract required fields and save in book JSONObject.
-            JSONObject responseObject = new JSONObject(builder.toString());
+            JSONObject responseObject = httpService(builtUri);
             JSONArray responseArray = responseObject.getJSONArray("items");
             for (int i = 0; i < responseArray.length(); i++) {
                 JSONObject object = responseArray.getJSONObject(i);
@@ -82,15 +57,94 @@ public class NetworkUtils {
                         .getString("publishedDate"));
                 book.put("imageLinks", object.getJSONObject("volumeInfo")
                         .getJSONObject("imageLinks"));
-                book.put("authors", formatAuthors(object.getJSONObject("volumeInfo")
+                book.put("authors", formatJSONArray(object.getJSONObject("volumeInfo")
                         .getJSONArray("authors")));
 
                 results.add(book);
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return results;
+    }
+
+    /**
+     * Search for details of book using the booking ID.
+     * @param bookId
+     * @return
+     */
+    public static JSONObject bookDetail(String bookId) {
+        JSONObject book = new JSONObject();
+
+        try {
+            Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                    .appendPath(bookId)
+                    .build();
+
+            // Extract required fields and save in book JSONObject.
+            JSONObject responseObject = httpService(builtUri);
+
+            book.put("id", responseObject.getString("id"));
+            book.put("title", responseObject.getJSONObject("volumeInfo")
+                    .getString("title"));
+            book.put("publisher", responseObject.getJSONObject("volumeInfo")
+                    .getString("publisher"));
+            book.put("publishedDate", responseObject.getJSONObject("volumeInfo")
+                    .getString("publishedDate"));
+            book.put("imageLinks", responseObject.getJSONObject("volumeInfo")
+                    .getJSONObject("imageLinks"));
+            book.put("authors", formatJSONArray(responseObject.getJSONObject("volumeInfo")
+                    .getJSONArray("authors")));
+            book.put("pageCount", responseObject.getJSONObject("volumeInfo")
+                    .getInt("pageCount"));
+            book.put("categories", formatJSONArray(responseObject.getJSONObject("volumeInfo")
+                    .getJSONArray("categories")));
+            book.put("description", responseObject.getJSONObject("volumeInfo")
+                    .getString("description"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return book;
+    }
+
+    /**
+     * Make http requests to Google Book API.
+     * @param uri
+     * @return
+     * @throws JSONException
+     */
+    private static JSONObject httpService(Uri uri) throws JSONException {
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+        // Use a StringBuilder to hold the incoming response.
+        StringBuilder builder = new StringBuilder();
+
+        try {
+            URL requestURL = new URL(uri.toString());
+
+            // Open Connection
+            urlConnection = (HttpURLConnection) requestURL.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Get InputStream
+            InputStream inputStream = urlConnection.getInputStream();
+
+            // Create BufferedReader from the input stream
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+                builder.append("\n");
+            }
+
+            if (builder.length() == 0) return null; // Builder was empty.
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (urlConnection != null) urlConnection.disconnect();
@@ -104,29 +158,29 @@ public class NetworkUtils {
             }
         }
 
-        return results;
+        return new JSONObject(builder.toString());
     }
 
     /**
      * Format authors in JSONArray into a single continuous string with newline breaks.
      *
-     * @param authorsArray JSONArray of authors.
+     * @param array JSONArray of authors.
      * @return String of authors.
      */
-    private static String formatAuthors(JSONArray authorsArray) throws JSONException {
+    private static String formatJSONArray(JSONArray array) throws JSONException {
         // Format authors into a continuous string value.
-        StringBuilder authorsBuilder = new StringBuilder();
-        for (int j = 0; j < authorsArray.length(); j++) {
-            if (authorsArray.length() > 1 && j != authorsArray.length() - 1) {
-                authorsBuilder.append(authorsArray.get(j));
-                authorsBuilder.append("\n");
+        StringBuilder arrayBuilder = new StringBuilder();
+        for (int j = 0; j < array.length(); j++) {
+            if (array.length() > 1 && j != array.length() - 1) {
+                arrayBuilder.append(array.get(j));
+                arrayBuilder.append("\n");
             }
 
-            if (authorsArray.length() == 1 || j == authorsArray.length() - 1) {
-                authorsBuilder.append(authorsArray.get(j));
+            if (array.length() == 1 || j == array.length() - 1) {
+                arrayBuilder.append(array.get(j));
             }
         }
 
-        return authorsBuilder.toString();
+        return arrayBuilder.toString();
     }
 }

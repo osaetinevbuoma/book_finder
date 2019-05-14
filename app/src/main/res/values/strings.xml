@@ -11,7 +11,7 @@
     </string>
     <string name="label_authors">Authors</string>
     <string name="label_publisher">Publisher</string>
-    <string name="label_publication_year">Publication Year</string>
+    <string name="label_publication_year">Publication Date</string>
     <string name="label_pages">Pages</string>
     <string name="label_categories">Categories</string>
     <string name="label_description">Description</string>
