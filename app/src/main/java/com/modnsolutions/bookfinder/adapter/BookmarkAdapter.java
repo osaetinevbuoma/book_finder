@@ -4,25 +4,30 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.modnsolutions.bookfinder.Book;
+import com.bumptech.glide.Glide;
 import com.modnsolutions.bookfinder.BookmarkFragment;
 import com.modnsolutions.bookfinder.R;
+import com.modnsolutions.bookfinder.db.entity.BookEntity;
 
 import java.util.List;
 
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHolder> {
 
+    private Context mContext;
     private LayoutInflater mInflater;
-    private List<Book> mBooks;
+    private List<BookEntity> mBooks;
     private BookmarkFragment.BookFragmentListener mListener;
 
-    public BookmarkAdapter(Context context, List<Book> books,
+    public BookmarkAdapter(Context context, List<BookEntity> books,
                            BookmarkFragment.BookFragmentListener listener) {
         mInflater = LayoutInflater.from(context);
+        mContext = context;
         mBooks = books;
         mListener = listener;
     }
@@ -36,7 +41,15 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // TODO: Bind appropiately
+        BookEntity book = mBooks.get(position);
+
+        Glide.with(mContext)
+                .load(book.getImageLink())
+                .fitCenter()
+                .into(holder.mBookImageView);
+
+        holder.mTitleTextView.setText(book.getTitle());
+        holder.mAuthorsTextView.setText(book.getAuthors());
     }
 
     @Override
@@ -45,18 +58,36 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
         return mBooks.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    /**
+     * Add books.
+     *
+     * @param books
+     */
+    public void setBooks(List<BookEntity> books) {
+        if (mBooks == null) mBooks = books;
+        else mBooks.addAll(books);
+        notifyDataSetChanged();
+    }
 
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private ImageView mBookImageView;
+        private TextView mTitleTextView;
+        private TextView mAuthorsTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            mBookImageView = itemView.findViewById(R.id.img_view_book);
+            mTitleTextView = itemView.findViewById(R.id.textview_book_title);
+            mAuthorsTextView = itemView.findViewById(R.id.textview_authors);
 
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onBookmarkClicked(null);
+            BookEntity book = mBooks.get(getAdapterPosition());
+            mListener.onBookmarkClicked(book.getBookId());
         }
     }
 }

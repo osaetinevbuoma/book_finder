@@ -18,10 +18,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
 import com.bumptech.glide.Glide;
+import com.modnsolutions.bookfinder.db.entity.BookEntity;
+import com.modnsolutions.bookfinder.db.viewmodel.BookViewModel;
 import com.modnsolutions.bookfinder.loader.BookDetailLoader;
 import com.modnsolutions.bookfinder.utils.Utilities;
 
@@ -43,6 +46,9 @@ public class BookDetailFragment extends Fragment implements
     private TextView mDescriptionTextView;
     private ProgressBar mProgressBar;
     private LinearLayout mLinearLayout;
+    private BookViewModel mBookViewModel;
+    private BookEntity mBook;
+    private JSONObject mJSONBook;
 
     public static final String FRAGMENT_TAG = BookDetailFragment.class.getCanonicalName();
     public static final String BOOK_ID_EXTRA = "com.modnsolutions.bookfinder.BOOK_ID_EXTRA";
@@ -84,10 +90,33 @@ public class BookDetailFragment extends Fragment implements
 
         Intent intent = getActivity().getIntent();
         if (intent != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString(BOOK_ID_EXTRA, intent.getStringExtra(SearchResultsFragment
-                    .QUERY_ID_EXTRA));
-            mLoaderManager.restartLoader(LOADER_ID, bundle, this);
+            // Find book in favorite. If it exist, display it, if not get book details from
+            // Google Books API.
+            mBookViewModel = ViewModelProviders.of(this).get(BookViewModel.class);
+            mBook = mBookViewModel.findFavorite(intent.getStringExtra(
+                    SearchResultsFragment.QUERY_ID_EXTRA));
+            if (mBook != null) {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mLinearLayout.setVisibility(View.VISIBLE);
+
+                Glide.with(this)
+                        .load(mBook.getImageLink())
+                        .centerCrop()
+                        .into(mBookImageView);
+                mBookImageView.setContentDescription(mBook.getTitle());
+                mTitleTextView.setText(mBook.getTitle());
+                mAuthorsTextView.setText(mBook.getAuthors());
+                mPublisherTextView.setText(mBook.getPublisher());
+                mPublicationDateTextView.setText(mBook.getPublishedDate());
+                mPagesTextView.setText(String.valueOf(mBook.getPageCount()));
+                mCategoriesTextView.setText(mBook.getCategories());
+                mDescriptionTextView.setText(HtmlCompat.fromHtml(mBook.getDescription(),0));
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString(BOOK_ID_EXTRA, intent.getStringExtra(SearchResultsFragment
+                        .QUERY_ID_EXTRA));
+                mLoaderManager.restartLoader(LOADER_ID, bundle, this);
+            }
         }
 
         return root;
@@ -97,12 +126,47 @@ public class BookDetailFragment extends Fragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_bookmark, menu);
+
+        // Get bookmark icon
+        MenuItem bookmarkIcon = menu.getItem(1);
+        if (mBook != null) {
+            bookmarkIcon.setIcon(R.drawable.ic_bookmark_saved);
+        } else {
+            bookmarkIcon.setIcon(R.drawable.ic_bookmark_unsaved);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_bookmark:
+                // If book exist in favorite, remove it and change icon. Set mBook to null.
+                // Else add to favorite and change icon.
+                if (mBook != null) {
+                    mBookViewModel.remove(mBook);
+                    item.setIcon(R.drawable.ic_bookmark_unsaved);
+                    mBook = null;
+                } else {
+                    if (mJSONBook != null) {
+                        try {
+                            BookEntity bookEntity = new BookEntity(mJSONBook.getString("id"),
+                                    mJSONBook.getString("title"),
+                                    mJSONBook.getString("publisher"),
+                                    mJSONBook.getString("publishedDate"),
+                                    Utilities.convertImageURL(mJSONBook.getJSONObject("imageLinks")
+                                            .getString("thumbnail")),
+                                    mJSONBook.getString("authors"),
+                                    mJSONBook.getInt("pageCount"),
+                                    mJSONBook.getString("categories"),
+                                    mJSONBook.getString("description"));
+
+                            mBookViewModel.insert(bookEntity);
+                            item.setIcon(R.drawable.ic_bookmark_saved);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 return true;
         }
 
@@ -119,6 +183,7 @@ public class BookDetailFragment extends Fragment implements
     @Override
     public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject data) {
         if (data != null) {
+            mJSONBook = data;
             try {
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mLinearLayout.setVisibility(View.VISIBLE);

@@ -27,4 +27,6 @@
     <string name="title_notifications">Notifications</string>
     <string name="search_hint">Find a book&#8230;</string>
     <string name="no_result_found">No books matching your search query.</string>
+    <string name="no_favorite">You have no favorite books yet.</string>
+    <string name="favorite_books">Favorite Books</string>
 </resources>

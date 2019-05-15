@@ -21,7 +21,6 @@ public class BookDetailLoader extends AsyncTaskLoader<JSONObject> {
     @Nullable
     @Override
     public JSONObject loadInBackground() {
-        // TODO: Check if book is saved in favorite. If it is, get the book and display. If not, fetch the book from Google Books API.
         return NetworkUtils.bookDetail(bookId);
     }
 

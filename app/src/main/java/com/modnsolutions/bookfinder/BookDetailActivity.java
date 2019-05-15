@@ -54,7 +54,7 @@ public class BookDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // When the Up button is pressed, the SearchResultsActivity should have the query
+                // When the Up button is pressed, the BookFinderActivity should have the query
                 // string and the current position of the book that was clicked. This will ensure
                 // that the fragment does not query for books with "Null" string titles and that
                 // the user is taken to the position of the book that was clicked.
@@ -64,6 +64,10 @@ public class BookDetailActivity extends AppCompatActivity {
                         intent.getStringExtra(SearchResultsFragment.QUERY_STRING_EXTRA));
                 returnIntent.putExtra(SearchResultsFragment.QUERY_POSITION_EXTRA,
                         intent.getIntExtra(SearchResultsFragment.QUERY_POSITION_EXTRA, -1));
+                if (intent.hasExtra(BookmarkFragment.TAB_FRAGMENT_EXTRA)) {
+                    returnIntent.putExtra(BookmarkFragment.TAB_FRAGMENT_EXTRA, intent.getIntExtra(
+                            BookmarkFragment.TAB_FRAGMENT_EXTRA, -1));
+                }
                 startActivity(returnIntent);
                 return true;
         }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
                     String queryString = v.getText().toString();
 
                     // Get connection status.
+                    // TODO: Check for poor or no network even when phone is not in airplane mode.
                     ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.
                             CONNECTIVITY_SERVICE);
 
@@ -60,5 +62,11 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public void favorite(View view) {
+        Intent intent = new Intent(this, BookFinderActivity.class);
+        intent.putExtra(BookmarkFragment.TAB_FRAGMENT_EXTRA, 1);
+        startActivity(intent);
     }
 }

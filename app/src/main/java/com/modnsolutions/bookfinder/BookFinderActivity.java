@@ -3,6 +3,7 @@ package com.modnsolutions.bookfinder;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,9 +32,8 @@ public class BookFinderActivity extends AppCompatActivity implements
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home).setText("Home"));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_bookmark_saved)
-                .setText("Favorites"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_bookmark_saved));
 
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorWhite));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -61,6 +61,12 @@ public class BookFinderActivity extends AppCompatActivity implements
 
             }
         });
+
+        // If user was viewing Favorite, return to Favorite tab.
+        Intent intent = getIntent();
+        if (intent.hasExtra(BookmarkFragment.TAB_FRAGMENT_EXTRA))
+            viewPager.setCurrentItem(intent.getIntExtra(BookmarkFragment.TAB_FRAGMENT_EXTRA,
+                    -1));
     }
 
     @Override
@@ -95,6 +101,13 @@ public class BookFinderActivity extends AppCompatActivity implements
 
     @Override
     public void onBookmarkClicked(String id) {
-
+        if (mTwoPane) {
+            // TODO: Dual view.
+        } else {
+            Intent intent = new Intent(this, BookDetailActivity.class);
+            intent.putExtra(SearchResultsFragment.QUERY_ID_EXTRA, id);
+            intent.putExtra(BookmarkFragment.TAB_FRAGMENT_EXTRA, 1);
+            startActivity(intent);
+        }
     }
 }
