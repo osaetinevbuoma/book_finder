@@ -11,8 +11,8 @@ More information about the Android Architecture Components are available at [htt
 
 ## Screenshots
 
-(screenshot_1.png "Screenshot 1") (screenshot_2.png "Screenshot 2") (screenshot_3.png "Screenshot 3") (screenshot_4.png "Screenshot 4")
+![alt text](screenshot_1.png "Screenshot 1") ![alt text](screenshot_2.png "Screenshot 2") ![alt text](screenshot_3.png "Screenshot 3") ![alt text](screenshot_4.png "Screenshot 4")
 
 ## Demo
 
-Download the demo APK [here](book_finder.apk)
+Download the demo APK [here](book_finder.apk).
