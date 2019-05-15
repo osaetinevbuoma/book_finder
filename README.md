@@ -16,8 +16,8 @@ More information about the Android Architecture Components are available at [htt
 &nbsp; <img src="screenshot_3.png" width="200px" /> &nbsp; <img src="screenshot_4.png" width="200px" />
 
 ### Tablet
-<img src="screenshot_5.png" width="400px" /> &nbsp; <img src="screenshot_6.png" width="400px" /> 
-&nbsp; <img src="screenshot_7.png" width="400px" />
+<img src="screenshot_5.png" width="450px" /> &nbsp; <img src="screenshot_6.png" width="450px" /> 
+&nbsp; <img src="screenshot_7.png" width="450px" />
 
 
 ## Demo
