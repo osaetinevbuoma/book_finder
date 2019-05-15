@@ -29,10 +29,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 
-/**
- * TODO: Reload more books once the user scrolls to bottom of screen.
- * TODO: Back button behaves awkwardly.
- */
 public class SearchResultsFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<JSONObject>> {
 

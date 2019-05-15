@@ -3,7 +3,6 @@ package com.modnsolutions.bookfinder;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +24,7 @@ public class BookFinderActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_finder);
 
-        if (findViewById(R.id.fragment_book_details) != null) mTwoPane = true;
+        if (findViewById(R.id.bookfinder_fragment_container) != null) mTwoPane = true;
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,11 +83,16 @@ public class BookFinderActivity extends AppCompatActivity implements
     @Override
     public void onSearchResultClicked(String id, String query, int position) {
         if (mTwoPane) {
+            Bundle bundle = new Bundle();
+            bundle.putString(SearchResultsFragment.QUERY_ID_EXTRA, id);
+
+            BookDetailFragment bookDetailFragment = new BookDetailFragment();
+            bookDetailFragment.setArguments(bundle);
+
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_book_details, new BookDetailFragment())
-                    .addToBackStack(BookDetailFragment.FRAGMENT_TAG)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(R.id.bookfinder_fragment_container, bookDetailFragment)
                     .commit();
         } else {
             Intent intent = new Intent(this, BookDetailActivity.class);
@@ -102,7 +106,18 @@ public class BookFinderActivity extends AppCompatActivity implements
     @Override
     public void onBookmarkClicked(String id) {
         if (mTwoPane) {
-            // TODO: Dual view.
+            Bundle bundle = new Bundle();
+            bundle.putString(SearchResultsFragment.QUERY_ID_EXTRA, id);
+            bundle.putInt(BookmarkFragment.TAB_FRAGMENT_EXTRA, 1);
+
+            BookDetailFragment bookDetailFragment = new BookDetailFragment();
+            bookDetailFragment.setArguments(bundle);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(R.id.bookfinder_fragment_container, bookDetailFragment)
+                    .commit();
         } else {
             Intent intent = new Intent(this, BookDetailActivity.class);
             intent.putExtra(SearchResultsFragment.QUERY_ID_EXTRA, id);

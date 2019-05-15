@@ -47,9 +47,12 @@ public class BookmarkFragment extends Fragment {
         mBookmarkRV.setAdapter(mAdapter);
         mBookmarkRV.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        DividerItemDecoration decoration = new DividerItemDecoration(getContext(),
+        DividerItemDecoration verticalItemDecoration = new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL);
-        mBookmarkRV.addItemDecoration(decoration);
+        DividerItemDecoration horizontalItemDecoration = new DividerItemDecoration(getContext(),
+                DividerItemDecoration.HORIZONTAL);
+        mBookmarkRV.addItemDecoration(verticalItemDecoration);
+        mBookmarkRV.addItemDecoration(horizontalItemDecoration);
 
         // Use view model to interact with data from DB.
         mBookViewModel = ViewModelProviders.of(this).get(BookViewModel.class);

@@ -88,7 +88,13 @@ public class BookDetailFragment extends Fragment implements
         mLinearLayout.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        Intent intent = getActivity().getIntent();
+        Intent intent = new Intent();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            intent.putExtra(SearchResultsFragment.QUERY_ID_EXTRA, bundle.getString(
+                    SearchResultsFragment.QUERY_ID_EXTRA));
+        } else intent = getActivity().getIntent();
+
         if (intent != null) {
             // Find book in favorite. If it exist, display it, if not get book details from
             // Google Books API.
@@ -101,7 +107,7 @@ public class BookDetailFragment extends Fragment implements
 
                 Glide.with(this)
                         .load(mBook.getImageLink())
-                        .centerCrop()
+                        .fitCenter()
                         .into(mBookImageView);
                 mBookImageView.setContentDescription(mBook.getTitle());
                 mTitleTextView.setText(mBook.getTitle());
@@ -112,10 +118,10 @@ public class BookDetailFragment extends Fragment implements
                 mCategoriesTextView.setText(mBook.getCategories());
                 mDescriptionTextView.setText(HtmlCompat.fromHtml(mBook.getDescription(),0));
             } else {
-                Bundle bundle = new Bundle();
-                bundle.putString(BOOK_ID_EXTRA, intent.getStringExtra(SearchResultsFragment
+                Bundle loaderBundle = new Bundle();
+                loaderBundle.putString(BOOK_ID_EXTRA, intent.getStringExtra(SearchResultsFragment
                         .QUERY_ID_EXTRA));
-                mLoaderManager.restartLoader(LOADER_ID, bundle, this);
+                mLoaderManager.restartLoader(LOADER_ID, loaderBundle, this);
             }
         }
 
@@ -145,7 +151,10 @@ public class BookDetailFragment extends Fragment implements
                 if (mBook != null) {
                     mBookViewModel.remove(mBook);
                     item.setIcon(R.drawable.ic_bookmark_unsaved);
+                    Utilities.toastMessage(getContext(), mBook.getTitle()
+                            + " has been removed from your favorites.");
                     mBook = null;
+
                 } else {
                     if (mJSONBook != null) {
                         try {
@@ -162,6 +171,9 @@ public class BookDetailFragment extends Fragment implements
 
                             mBookViewModel.insert(bookEntity);
                             item.setIcon(R.drawable.ic_bookmark_saved);
+                            Utilities.toastMessage(getContext(),
+                                    mJSONBook.getString("title")
+                                            + " has been added to your favorites.");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -191,7 +203,7 @@ public class BookDetailFragment extends Fragment implements
                 Glide.with(this)
                         .load(Utilities.convertImageURL(data.getJSONObject("imageLinks")
                                 .getString("thumbnail")))
-                        .centerCrop()
+                        .fitCenter()
                         .into(mBookImageView);
                 mBookImageView.setContentDescription(data.getString("title"));
                 mTitleTextView.setText(data.getString("title"));

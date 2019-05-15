@@ -64,8 +64,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
      * @param books
      */
     public void setBooks(List<BookEntity> books) {
-        if (mBooks == null) mBooks = books;
-        else mBooks.addAll(books);
+        mBooks = books;
         notifyDataSetChanged();
     }
 

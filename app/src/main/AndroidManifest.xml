@@ -23,9 +23,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BookmarkActivity"
-            android:label="@string/saved_books_app_title" />
-        <activity
             android:name=".BookDetailActivity"
             android:label="@string/book_details_app_title"
             android:parentActivityName=".BookFinderActivity">

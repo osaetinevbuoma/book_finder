@@ -53,7 +53,7 @@ public class BookFinderAdapter extends RecyclerView.Adapter<BookFinderAdapter.Vi
             Glide.with(mContext)
                     .load(Utilities.convertImageURL(book.getJSONObject("imageLinks")
                             .getString("thumbnail")))
-                    .centerCrop()
+                    .fitCenter()
                     .into(holder.mBookImageView);
             holder.mTitleTextView.setText(book.getString("title"));
             holder.mAuthorsTextView.setText(book.getString("authors"));
