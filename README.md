@@ -11,8 +11,8 @@ More information about the Android Architecture Components are available at [htt
 
 ## Screenshots
 
-<img src="screenshot_1.png" width="250px" /> &nbsp; <img src="screenshot_2.png" width="250px" /> 
-&nbsp; <img src="screenshot_3.png" width="250px" /> &nbsp; <img src="screenshot_4.png" width="250px" />
+<img src="screenshot_1.png" width="200px" /> &nbsp; <img src="screenshot_2.png" width="200px" /> 
+&nbsp; <img src="screenshot_3.png" width="200px" /> &nbsp; <img src="screenshot_4.png" width="200px" />
 
 
 ## Demo
