@@ -14,9 +14,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.modnsolutions.bookfinder.adapter.PagerAdapter;
 
-/**
- * TODO: Transitions.
- */
 public class BookFinderActivity extends AppCompatActivity implements
         SearchResultsFragment.SearchResultsFragmentListener, BookmarkFragment.BookFragmentListener {
 

@@ -21,7 +21,7 @@ public abstract class BookFinderDatabase extends RoomDatabase {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         BookFinderDatabase.class, "book_finder")
                         // TODO: change migration strategy
-                        .fallbackToDestructiveMigration()
+                        // .fallbackToDestructiveMigration()
                         .build();
             }
         }
